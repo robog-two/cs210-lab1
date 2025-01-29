@@ -44,12 +44,6 @@ Z: 90
 int main(){
   char ch;
 
-  printf("%c", mapInt('a', 97, 122, 65, 90));
-  printf("%c", mapInt('z', 97, 122, 65, 90));
-  printf("%c", mapInt('A', 65, 90, 97, 122));
-  printf("%c", mapInt('Z', 65, 90, 97, 122));
-
-
   while (ch != '!') {
     printf("Enter a character (! to stop):  ");
     scanf(" %c", &ch);
