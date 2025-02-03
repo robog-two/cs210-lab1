@@ -1,45 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <assert.h>
 
 bool isInRange(int number, int min, int max) {
   return (min <= number) && (number <= max);
 }
-
-int mapInt(
-  int number,
-  int startOfRange,
-  int endOfRange,
-  int startOfNewRange,
-  int endOfNewRange
-) {
-  // These should all be true
-  assert(endOfRange > startOfRange);
-  assert(endOfNewRange > startOfNewRange);
-  assert(isInRange(number, startOfRange, endOfRange));
-
-  // This would be more useful with floats and the second part isn't really necessary,
-  // but this is a common function so I figured I'd implement it like this and I can use
-  // it with floats later if I really need to
-  if (startOfNewRange > startOfRange) {
-    return (number - startOfRange + startOfNewRange) / ((endOfRange - startOfRange) / (endOfNewRange - startOfNewRange));
-  } else {
-    return (number - startOfRange + startOfNewRange) / ((endOfNewRange - startOfNewRange) / (endOfRange - startOfRange));
-  }
-
-  // Quick Sanity Check: Number 2 going from a range of 0-2 to 0-4:
-  // ((2 - 0) + 0) / ((2 - 0) / (4 - 0))
-  // 2 / 0.5
-  // 4 ✔️ Correct
-}
-
-/*
-ASCII Character Values
-a: 97
-z: 122
-A: 65
-Z: 90
-*/
 
 int main(){
   char ch;
@@ -50,19 +14,29 @@ int main(){
     printf("Original character: %c\n", ch);
 
     // Show next letter if within a-y
-    if (isInRange(ch, 97, 121)) {
+    if (isInRange(ch, 'a', 'y')) {
       char following = ch + 1;
       printf("Following character:  %c\n", following);
     }
 
-    // If lowercase, make uppercase
-    if (isInRange(ch, 97, 122)) {
-      ch = mapInt(ch, 97, 122, 65, 90);
-    } else if (isInRange(ch, 65, 90)) { // And vice versa
-    ch = mapInt(ch, 65, 90, 97, 122);
+    /*
+    ASCII Character Values
+    a: 97
+    z: 122
+    A: 65
+    Z: 90
+
+    A-Z comes before a-z, and a-z are 32 characters after
+    Therefore flipping the 32's place bit with XOR
+    changes the case of the letter.
+    */
+
+    if (isInRange(ch, 'a', 'z') || isInRange(ch, 'A', 'Z')) {
+      // ^ is a bitwise XOR e.g. A -> a looks like 1000001 ^ 0100000 -> 1100001
+      ch = ch ^ 32;
+      printf("Flipped character:  %c\n", ch);
     }
 
-    printf("Flipped character:  %c\n", ch);
     fflush(stdout);
   }
   return 0;
